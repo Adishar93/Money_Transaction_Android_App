@@ -1,4 +1,4 @@
-package com.adishar93.moneytransactionapp;
+package com.adishar93.moneytransactionapp.fragments;
 
 import android.os.Bundle;
 
@@ -13,11 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.adishar93.moneytransactionapp.R;
+import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +32,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignupFragment extends Fragment {
 
     FirebaseAuth mAuth;
+    FirebaseDatabase mdatabase;
+    DatabaseReference mUserRef;
+
 
     EditText mName;
     EditText mEmail;
@@ -50,6 +58,8 @@ public class SignupFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth=FirebaseAuth.getInstance();
+        mdatabase = FirebaseDatabase.getInstance();
+        mUserRef = mdatabase.getReference("Users");
     }
 
     @Override
@@ -78,6 +88,9 @@ public class SignupFragment extends Fragment {
                 String password=mPassword.getText().toString();
                 String confirmPassword=mConfirmPassword.getText().toString();
 
+                final User user=new User(name,email,phone);
+
+
                 if(name.equals("")||email.equals("")||phone.equals("")||password.equals("")||confirmPassword.equals(""))
                 {
                     Toast.makeText(getActivity(),"Fields cannot be left empty!",Toast.LENGTH_SHORT).show();
@@ -92,9 +105,27 @@ public class SignupFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
+                                        // Sign ip success
                                         Log.d("Firebase : ", "createUserWithEmail:success");
                                         Toast.makeText(getActivity(), "Account Created!",Toast.LENGTH_SHORT).show();
+
+                                        //Update Database with user data
+                                        user.setUid(mAuth.getUid());
+                                        mUserRef.child(user.getUid()).setValue(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getActivity(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getActivity(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                        //update UI to the login page
                                         mAuth.signOut();
                                         openLogin();
                                     } else {

@@ -1,27 +1,15 @@
-package com.adishar93.moneytransactionapp;
+package com.adishar93.moneytransactionapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.adishar93.moneytransactionapp.fragments.LoginFragment;
+import com.adishar93.moneytransactionapp.R;
+import com.adishar93.moneytransactionapp.fragments.SignupFragment;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void openHome(FirebaseUser user)
+    public void openHome(FirebaseUser user)
     {
         if(user!=null)
         {
@@ -67,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void openSignup()
+    public void openSignup()
     {
 
         //Set Signup Fragment

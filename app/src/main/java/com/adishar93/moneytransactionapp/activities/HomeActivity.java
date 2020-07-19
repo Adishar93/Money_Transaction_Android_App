@@ -1,4 +1,4 @@
-package com.adishar93.moneytransactionapp;
+package com.adishar93.moneytransactionapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.view.Window;
+
+import com.adishar93.moneytransactionapp.R;
 
 public class HomeActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.adishar93.moneytransactionapp;
+package com.adishar93.moneytransactionapp.fragments;
 
 import android.os.Bundle;
 
@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adishar93.moneytransactionapp.R;
+import com.adishar93.moneytransactionapp.activities.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
