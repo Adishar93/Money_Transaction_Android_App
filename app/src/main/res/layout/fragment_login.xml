@@ -5,18 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".LoginFragment">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_height= "match_parent"
         android:layout_width= "match_parent"
         android:background="@drawable/bg">
 
 
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
     <androidx.cardview.widget.CardView
         style="@style/CardViewCustomStyle"
@@ -39,9 +33,9 @@
 
                 <ImageView
                     android:layout_marginTop="25dp"
-                    android:layout_width="30dp"
+                    android:layout_width="27dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/usr_icon"
+                    android:src="@drawable/email_icon"
                     />
                 <EditText
                     android:id="@+id/etEmail"

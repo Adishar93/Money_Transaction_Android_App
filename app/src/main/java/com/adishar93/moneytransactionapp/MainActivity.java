@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Set Signup Fragment
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.enter_from_left,R.anim.exit_to_right);
         ft.replace(R.id.fragment_placeholder, SignupFragment.newInstance());
         ft.addToBackStack(null);
         ft.commit();

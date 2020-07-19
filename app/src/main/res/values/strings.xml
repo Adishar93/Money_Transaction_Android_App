@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Money Transaction</string>
+    <string name="name_label">Full Name</string>
+    <string name="phone_label">Mobile/Phone</string>
     <string name="email_label">Your Email Address</string>
     <string name="pass_label">Password</string>
+    <string name="confpass_label">Confirm Password</string>
     <string name="login_label">Login</string>
     <string name="signup_label">create a new account</string>
+    <string name="signupb_label">Create</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
