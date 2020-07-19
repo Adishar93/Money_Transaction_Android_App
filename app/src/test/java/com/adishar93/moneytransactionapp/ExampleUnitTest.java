@@ -1,4 +1,4 @@
-package com.example.stirringmindsaad1;
+package com.adishar93.moneytransactionapp;
 
 import org.junit.Test;
 
