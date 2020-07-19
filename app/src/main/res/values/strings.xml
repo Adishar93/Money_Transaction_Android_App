@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Login</string>
-    <string name="usr_label">Username</string>
+    <string name="app_name">Money Transaction</string>
+    <string name="email_label">Your Email Address</string>
     <string name="pass_label">Password</string>
-    <string name="submit_label">Submit</string>
+    <string name="login_label">Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
