@@ -7,5 +7,6 @@
     <!--custom colors-->
     <color name="PlainTransparent">#00000000</color>
     <color name="PlainWhite">#FFFFFF</color>
+    <color name="LinkBlue">#0C51D3</color>
 
 </resources>
