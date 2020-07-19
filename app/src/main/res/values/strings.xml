@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="usr_label">Username</string>
+    <string name="pass_label">Password</string>
+    <string name="submit_label">Submit</string>
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height= "match_parent"
+    android:layout_width= "match_parent"
+    android:background="@drawable/bg">
+
+    <androidx.cardview.widget.CardView
+        style="@style/CardViewCustomStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:id="@+id/etusernamell"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:layout_marginTop="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/usr_icon"
+                />
+            <EditText
+                android:id="@+id/etusername"
+                android:hint="@string/usr_label"
+                android:inputType="text"
+                style="@style/LoginEditTextStyle"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/etpasswordll"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/etusernamell"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:layout_marginTop="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pass_icon"
+                />
+
+            <EditText
+            android:id="@+id/etpassword"
+            android:hint="@string/pass_label"
+            android:inputType="textPassword"
+            style="@style/LoginEditTextStyle"
+            />
+
+        </LinearLayout>
+
+    <Button
+        android:layout_below="@id/etpasswordll"
+        android:text="@string/submit_label"
+        android:layout_centerHorizontal="true"
+        style="@style/ButtonStyle"
+
+        />
+
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
