@@ -9,6 +9,11 @@
     <string name="signup_label">create a new account</string>
     <string name="signupb_label">Create</string>
     <string name="makeRequestb_label">Make Request</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-</resources>
+    <string name="enterAmount_label">Enter Amt</string>
+    <string name="writeDescription_label">Write a description.</string>
+    <string name="sendrequestb_label">Send Request</string>
+
+    <string name="amounttv_label">₹</string>
+
+
+    </resources>
