@@ -6,6 +6,10 @@ public class User {
     String phone;
     String uid;
 
+    public User() {
+
+    }
+
     public User(String name, String email, String phone) {
         this.name = name;
         this.email = email;

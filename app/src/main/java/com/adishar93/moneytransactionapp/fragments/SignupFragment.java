@@ -107,7 +107,7 @@ public class SignupFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         // Sign ip success
                                         Log.d("Firebase : ", "createUserWithEmail:success");
-                                        Toast.makeText(getActivity(), "Account Created!",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Account Created!",Toast.LENGTH_SHORT).show();
 
                                         //Update Database with user data
                                         user.setUid(mAuth.getUid());
@@ -115,13 +115,13 @@ public class SignupFragment extends Fragment {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(getActivity(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(getActivity(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
 
@@ -131,7 +131,7 @@ public class SignupFragment extends Fragment {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w("Firebase : ", "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(getActivity(), "Create User failed.",
+                                        Toast.makeText(getContext(), "Create User failed.",
                                                 Toast.LENGTH_SHORT).show();
 
                                     }
