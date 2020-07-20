@@ -8,14 +8,14 @@
     <RelativeLayout
         android:layout_height= "match_parent"
         android:layout_width= "match_parent"
-        android:background="@drawable/bg1">
+        android:background="@drawable/bg2">
 
 
 
         <androidx.cardview.widget.CardView
             style="@style/CardViewCustomStyle"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="150dp"
+            android:layout_marginBottom="100dp"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
             >
