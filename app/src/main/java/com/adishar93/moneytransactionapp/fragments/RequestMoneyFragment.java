@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.pojo.User;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.transition.MaterialContainerTransform;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class RequestMoneyFragment extends Fragment {
@@ -37,8 +41,10 @@ public class RequestMoneyFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
+    MakeRequestMainFragment mMakeRequestMainFragment;
+
     public RequestMoneyFragment() {
-        // Required empty public constructor
+
     }
 
 
@@ -50,8 +56,13 @@ public class RequestMoneyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDatabase= FirebaseDatabase.getInstance().getReference("Users");
         mAuth=FirebaseAuth.getInstance();
+
+        mMakeRequestMainFragment=MakeRequestMainFragment.newInstance();
+
+        mMakeRequestMainFragment.setSharedElementEnterTransition(new MaterialContainerTransform());
     }
 
     @Override
@@ -145,61 +156,77 @@ public class RequestMoneyFragment extends Fragment {
 
         return view;
     }
-}
 
-class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    private List<User> userList;
-    private Context mContext;
 
-    // View holder class whose objects represent each list item
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameTextView;
-        public TextView emailTextView;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nameTextView = itemView.findViewById(R.id.tvName);
-            emailTextView = itemView.findViewById(R.id.tvEmail);
+    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+
+        private List<User> userList;
+        private Context mContext;
+
+        // View holder class whose objects represent each list item
+        class MyViewHolder extends RecyclerView.ViewHolder {
+            public TextView nameTextView;
+            public TextView emailTextView;
+            public MaterialButton mMakeRequestButton;
+
+            public MyViewHolder(@NonNull View itemView) {
+                super(itemView);
+                nameTextView = itemView.findViewById(R.id.tvName);
+                emailTextView = itemView.findViewById(R.id.tvEmail);
+                mMakeRequestButton=itemView.findViewById(R.id.bmakeRequest);
+                mMakeRequestButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        FragmentTransaction ft = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.tab_layout, MakeRequestMainFragment.newInstance());
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+                });
+            }
+
+            public void bindData(User user, Context context) {
+                nameTextView.setText(user.getName());
+                emailTextView.setText(user.getEmail());
+
+            }
         }
 
-        public void bindData(User user, Context context) {
-            nameTextView.setText(user.getName());
-            emailTextView.setText(user.getEmail());
+
+        public MyAdapter(List<User> modelList, Context context) {
+            userList = modelList;
+            mContext = context;
         }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            // Inflate out card list item
+
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_useraccount_item, parent, false);
+            // Return a new view holder
+
+            return new MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            // Bind data for the item at position
+
+            holder.bindData(userList.get(position), mContext);
+        }
+
+        @Override
+        public int getItemCount() {
+            // Return the total number of items
+
+            return userList.size();
+        }
+
+
     }
-
-
-    public MyAdapter(List<User> modelList, Context context) {
-        userList = modelList;
-        mContext = context;
-    }
-
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate out card list item
-
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_useraccount_item, parent, false);
-        // Return a new view holder
-
-        return new MyViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        // Bind data for the item at position
-
-        holder.bindData(userList.get(position), mContext);
-    }
-
-    @Override
-    public int getItemCount() {
-        // Return the total number of items
-
-        return userList.size();
-    }
-
-
 }
+
