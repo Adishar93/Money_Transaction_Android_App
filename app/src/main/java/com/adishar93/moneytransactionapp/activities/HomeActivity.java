@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
@@ -18,11 +19,14 @@ import com.adishar93.moneytransactionapp.fragments.RecieveGrantFragment;
 import com.adishar93.moneytransactionapp.fragments.RequestMoneyFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
 
     ViewPager2 mViewPager;
     TabLayout mTabLayout;
+
+    FirebaseAuth mAuth;
 
     String[] mTabNames={"Request","Grant"};
 
@@ -37,6 +41,17 @@ public class HomeActivity extends AppCompatActivity {
 
         //Setting  up ViewPager and Tab Layout
         initTabViewPager();
+
+        //Firebase Variables
+        mAuth=FirebaseAuth.getInstance();
+
+        //Check Login Or Not
+        if(mAuth.getCurrentUser()==null)
+        {
+            Intent intent=new Intent(this,AuthenticationActivity.class);
+            finish();
+            startActivity(intent);
+        }
     }
 
     private void initTabViewPager()

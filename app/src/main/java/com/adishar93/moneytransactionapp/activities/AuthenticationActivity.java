@@ -12,22 +12,15 @@ import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.fragments.SignupFragment;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class AuthenticationActivity extends AppCompatActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        //Set Transition
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            // Apply activity transition
-//            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-//
-//            getWindow().setExitTransition(new Fade());
-//        }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_authentication);
 
 
         //First Load Login Fragment
@@ -44,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         if(user!=null)
         {
             //Start Home Activity
-            Toast.makeText(MainActivity.this, "Login Successful.",
+            Toast.makeText(AuthenticationActivity.this, "Login Successful.",
                     Toast.LENGTH_SHORT).show();
 
             Intent intent=new Intent(this,HomeActivity.class);

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
-import com.adishar93.moneytransactionapp.activities.MainActivity;
+import com.adishar93.moneytransactionapp.activities.AuthenticationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -90,7 +90,7 @@ public class LoginFragment extends Fragment {
                                                 // Sign in success, update UI with the signed-in user's information
                                                 Log.d("Firebase : ", "signInWithEmail:success");
                                                 FirebaseUser user = mAuth.getCurrentUser();
-                                                ((MainActivity) getActivity()).openHome(user);
+                                                ((AuthenticationActivity) getActivity()).openHome(user);
                                             } else {
                                                 // If sign in fails, display a message to the user.
                                                 Log.w("Firebase : ", "signInWithEmail:failure", task.getException());
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
         mSignup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).openSignup();
+                ((AuthenticationActivity)getActivity()).openSignup();
             }
         });
 
@@ -127,7 +127,7 @@ public class LoginFragment extends Fragment {
         super.onStart();
 
         FirebaseUser currentUser=mAuth.getCurrentUser();
-        ((MainActivity)getActivity()).openHome(currentUser);
+        ((AuthenticationActivity)getActivity()).openHome(currentUser);
     }
 
     private void resetPassField()
