@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class RequestMoneyFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar mProgressView;
 
 
     private DatabaseReference mDatabase;
@@ -68,6 +70,7 @@ public class RequestMoneyFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_request_money, container, false);
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressView=view.findViewById(R.id.pbProgress);
 
         final List<User> userList = new ArrayList<>();
 
@@ -101,7 +104,7 @@ public class RequestMoneyFragment extends Fragment {
                 if(!temp.getUid().equals(mAuth.getUid()))
                 userList.add(temp);
 
-
+                mProgressView.setVisibility(View.INVISIBLE);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -171,19 +174,20 @@ public class RequestMoneyFragment extends Fragment {
 
 
 
+
         // View holder class whose objects represent each list item
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView nameTextView;
             public TextView emailTextView;
             public TextView secretUidTextView;
             private MaterialButton makeRequestButton;
+            private FragmentTransaction mFragmentTransaction;
 
             public MyViewHolder(@NonNull final View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.tvName);
                 emailTextView = itemView.findViewById(R.id.tvEmail);
                 makeRequestButton= itemView.findViewById(R.id.bMakeRequest);
-
 
             }
 
@@ -199,10 +203,14 @@ public class RequestMoneyFragment extends Fragment {
                         assert getParentFragment().getFragmentManager() != null;
 
 
-                        FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
-                        ft.replace(R.id.fragment_placeholder, MakeRequestUserDetailFragment.newInstance(user.getName(),user.getEmail(),user.getUid()));
-                        ft.addToBackStack(null);
-                        ft.commit();
+
+                        mFragmentTransaction = getParentFragment().getFragmentManager().beginTransaction();
+                        mFragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right,R.anim.enter_from_right,R.anim.exit_to_left);
+                        mFragmentTransaction.replace(R.id.fragment_placeholder,MakeRequestUserDetailFragment.newInstance(user.getName(),user.getEmail(),user.getUid()) );
+                        mFragmentTransaction.addToBackStack(null);
+                        mFragmentTransaction.commit();
+                        //mItemView.findViewById(R.id.cvMain).setTransitionName("");
+
                     }
                 });
             }

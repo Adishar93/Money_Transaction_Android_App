@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class ReceiveGrantFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar mProgressView;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -65,6 +67,7 @@ public class ReceiveGrantFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_receive_grant, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressView=view.findViewById(R.id.pbProgress);
 
         final List<Request> requestList = new ArrayList<>();
         // use this setting to improve performance if you know that changes
@@ -95,6 +98,7 @@ public class ReceiveGrantFragment extends Fragment {
 
                     requestList.add(temp);
 
+                    mProgressView.setVisibility(View.INVISIBLE);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -185,6 +189,7 @@ public class ReceiveGrantFragment extends Fragment {
 
 
                         FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right,R.anim.enter_from_right,R.anim.exit_to_left);
                         ft.replace(R.id.fragment_placeholder, GrantRequestDetailFragment.newInstance(request.getName(),request.getEmail(),request.getAmount(),request.getDescription()));
                         ft.addToBackStack(null);
                         ft.commit();

@@ -10,5 +10,6 @@
     <color name="LinkBlue">#0C51D3</color>
     <color name="FullBlack">#000000</color>
     <color name="requestOrange">#FF772E</color>
+    <color name="lightGrey">#10090B0B</color>
 
 </resources>

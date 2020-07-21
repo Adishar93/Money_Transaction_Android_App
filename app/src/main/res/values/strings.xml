@@ -18,7 +18,7 @@
     <string name="signupb_label">Create</string>
     <string name="makeRequestb_label">Make Request</string>
     <string name="sendRequestb_label">Send Request</string>
-    <string name="viewRequestb_label">View</string>
+    <string name="viewRequestb_label">View Request</string>
     <string name="grantFullb_label">Grant Full</string>
 
     <string name="warncl_amount_desc_empty">You cannot leave amount or description empty!</string>
