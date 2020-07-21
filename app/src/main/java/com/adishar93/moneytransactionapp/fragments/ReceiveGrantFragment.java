@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
+import com.adishar93.moneytransactionapp.pojo.Request;
 import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,34 +31,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RequestMoneyFragment extends Fragment {
+public class ReceiveGrantFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    public RequestMoneyFragment() {
+    public ReceiveGrantFragment() {
         // Required empty public constructor
     }
 
 
-    public static RequestMoneyFragment newInstance() {
-        RequestMoneyFragment fragment = new RequestMoneyFragment();
+    public static ReceiveGrantFragment newInstance() {
+        ReceiveGrantFragment fragment = new ReceiveGrantFragment();
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Firebase Initialization
-        mDatabase= FirebaseDatabase.getInstance().getReference("Users");
         mAuth=FirebaseAuth.getInstance();
-
-
+        mDatabase= FirebaseDatabase.getInstance().getReference("Requests").child(mAuth.getUid());
 
     }
 
@@ -65,13 +63,10 @@ public class RequestMoneyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_request_money, container, false);
-
+        View view= inflater.inflate(R.layout.fragment_receive_grant, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
-        final List<User> userList = new ArrayList<>();
-
-
+        final List<Request> requestList = new ArrayList<>();
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
 
@@ -84,11 +79,11 @@ public class RequestMoneyFragment extends Fragment {
 
         // specify an adapter and pass in our data model list
 
-        mAdapter = new MyAdapter(userList, getContext());
+        mAdapter = new ReceiveGrantFragment.MyAdapter(requestList, getContext());
         mRecyclerView.setAdapter(mAdapter);
 
 
-        //Loading user List from Firebase
+        //Loading Request List from Firebase
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
@@ -96,11 +91,9 @@ public class RequestMoneyFragment extends Fragment {
                 Log.d("Firebase : ", "onChildAdded:" + dataSnapshot.getKey());
                 Log.d("Firebase : ", "onChildAdded:" + dataSnapshot.getKey());
 
-                User temp=dataSnapshot.getValue(User.class);
+                Request temp=dataSnapshot.getValue(Request.class);
 
-                if(!temp.getUid().equals(mAuth.getUid()))
-                userList.add(temp);
-
+                    requestList.add(temp);
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -145,10 +138,8 @@ public class RequestMoneyFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
             }
         };
+
         mDatabase.addChildEventListener(childEventListener);
-
-
-
 
         return view;
     }
@@ -156,17 +147,10 @@ public class RequestMoneyFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
     //Inner Class Recycler View Adapter
-    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    class MyAdapter extends RecyclerView.Adapter<ReceiveGrantFragment.MyAdapter.MyViewHolder> {
 
-        private List<User> userList;
+        private List<Request> requestList;
         private Context mContext;
 
 
@@ -175,23 +159,24 @@ public class RequestMoneyFragment extends Fragment {
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView nameTextView;
             public TextView emailTextView;
-            public TextView secretUidTextView;
-            private MaterialButton makeRequestButton;
+            private MaterialButton viewRequestButton;
 
             public MyViewHolder(@NonNull final View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.tvName);
                 emailTextView = itemView.findViewById(R.id.tvEmail);
-                makeRequestButton= itemView.findViewById(R.id.bMakeRequest);
+
+                viewRequestButton= itemView.findViewById(R.id.bViewRequest);
 
 
             }
 
-            public void bindData(final User user, Context context) {
-                nameTextView.setText(user.getName());
-                emailTextView.setText(user.getEmail());
+            public void bindData(final Request request, Context context) {
+                nameTextView.setText(request.getName());
+                emailTextView.setText(request.getEmail());
 
-                makeRequestButton.setOnClickListener(new View.OnClickListener() {
+
+                viewRequestButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Load HomeTabFragment
@@ -200,54 +185,49 @@ public class RequestMoneyFragment extends Fragment {
 
 
                         FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
-                        ft.replace(R.id.fragment_placeholder, MakeRequestUserDetailFragment.newInstance(user.getName(),user.getEmail(),user.getUid()));
+                        ft.replace(R.id.fragment_placeholder, GrantRequestDetailFragment.newInstance(request.getName(),request.getEmail(),request.getAmount(),request.getDescription()));
                         ft.addToBackStack(null);
                         ft.commit();
                     }
                 });
+
             }
         }
 
 
-        public MyAdapter(List<User> modelList, Context context) {
-            userList = modelList;
+        public MyAdapter(List<Request> modelList, Context context) {
+            requestList = modelList;
             mContext = context;
         }
 
         @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ReceiveGrantFragment.MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             // Inflate out card list item
 
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_useraccount_request_item, parent, false);
+                    .inflate(R.layout.list_useraccount_grant_item, parent, false);
             // Return a new view holder
 
-            return new MyViewHolder(view);
+            return new ReceiveGrantFragment.MyAdapter.MyViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ReceiveGrantFragment.MyAdapter.MyViewHolder holder, int position) {
             // Bind data for the item at position
 
-            holder.bindData(userList.get(position), mContext);
+            holder.bindData(requestList.get(position), mContext);
         }
 
         @Override
         public int getItemCount() {
             // Return the total number of items
 
-            return userList.size();
+            return requestList.size();
         }
 
 
     }
 
 
-
-
-
-
-
 }
-

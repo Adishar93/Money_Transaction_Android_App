@@ -5,17 +5,24 @@
     <string name="email_label">Your Email Address</string>
     <string name="pass_label">Password</string>
     <string name="confpass_label">Confirm Password</string>
-    <string name="login_label">Login</string>
-    <string name="signup_label">create a new account</string>
-    <string name="signupb_label">Create</string>
-    <string name="makeRequestb_label">Make Request</string>
+    <string name="amounttv_label">₹</string>
+
     <string name="enterAmount_label">Enter Amt</string>
     <string name="writeDescription_label">Write a description.</string>
-    <string name="sendrequestb_label">Send Request</string>
+    <string name="requestedBy_label">Requested By</string>
+    <string name="description_label">Description</string>
+
+    <string name="login_label">Login</string>
+    <string name="signup_label">create a new account</string>
+
+    <string name="signupb_label">Create</string>
+    <string name="makeRequestb_label">Make Request</string>
+    <string name="sendRequestb_label">Send Request</string>
+    <string name="viewRequestb_label">View</string>
+    <string name="grantFullb_label">Grant Full</string>
 
     <string name="warncl_amount_desc_empty">You cannot leave amount or description empty!</string>
 
-    <string name="amounttv_label">₹</string>
 
 
-    </resources>
+</resources>

@@ -122,17 +122,20 @@ public class SignupFragment extends Fragment {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
                                                 //Snackbar.make(getView(), "Data Written to Database!", Snackbar.LENGTH_SHORT)
                                                  //       .show();
+                                                Log.d("Firebase : ", "Signup Data Written to Database");
+
                                             }
                                         })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
+                                                        //Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
                                                         //Snackbar.make(getView(), "Failed to Write Data to Database!", Snackbar.LENGTH_SHORT)
                                                           //      .show();
+                                                        Log.d("Firebase : ", "Failed to write Signup Data to Database");
                                                     }
                                                 });
 

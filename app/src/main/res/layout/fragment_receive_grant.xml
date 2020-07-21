@@ -3,12 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.RecieveGrantFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".fragments.ReceiveGrantFragment">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="You recieve Grant Requests here" />
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+    </RelativeLayout>
 
 </FrameLayout>

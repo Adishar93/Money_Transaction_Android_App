@@ -40,9 +40,12 @@ public class MakeRequestUserDetailFragment extends Fragment {
     private String mEmail;
     private String mUid;
 
-    private Button mSendRequestButton;
+
+    private TextView mNameTextView;
+    private TextView mEmailTextView;
     private TextInputEditText mAmountEditText;
     private TextInputEditText mDescriptionEditText;
+    private Button mSendRequestButton;
 
     FirebaseAuth mAuth;
     private DatabaseReference mDatabaseStore;
@@ -76,7 +79,7 @@ public class MakeRequestUserDetailFragment extends Fragment {
 
         mAuth=FirebaseAuth.getInstance();
 
-        mDatabaseStore=FirebaseDatabase.getInstance().getReference("Requests").child(mUid);
+        mDatabaseStore=FirebaseDatabase.getInstance().getReference("Requests").child(mUid).child(mAuth.getUid());
 
         mDatabaseRetrieve=FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getUid());
 
@@ -105,8 +108,8 @@ public class MakeRequestUserDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_make_request_user_detail, container, false);
         //initializing TextViews
-        TextView mNameTextView=view.findViewById(R.id.tvName);
-        TextView mEmailTextView=view.findViewById(R.id.tvEmail);
+        mNameTextView=view.findViewById(R.id.tvName);
+        mEmailTextView=view.findViewById(R.id.tvEmail);
         mSendRequestButton=view.findViewById(R.id.bSendRequest);
         mAmountEditText=view.findViewById(R.id.tietAmount);
         mDescriptionEditText=view.findViewById(R.id.tietDescription);

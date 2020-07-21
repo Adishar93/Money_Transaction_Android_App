@@ -40,7 +40,7 @@
                 <EditText
                     android:id="@+id/etEmail"
                     android:hint="@string/email_label"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     style="@style/LoginEditTextStyle"
                     />
 
