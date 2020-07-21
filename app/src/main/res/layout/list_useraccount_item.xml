@@ -47,6 +47,13 @@
         android:layout_alignParentRight="true"
 
          />
+   <!-- A secret invisible Text View Used for Data Transfer    -->
+    <TextView
+        android:id="@+id/tvSecretUid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        />
 
 </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

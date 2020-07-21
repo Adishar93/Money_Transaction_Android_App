@@ -13,6 +13,8 @@
     <string name="writeDescription_label">Write a description.</string>
     <string name="sendrequestb_label">Send Request</string>
 
+    <string name="warncl_amount_desc_empty">You cannot leave amount or description empty!</string>
+
     <string name="amounttv_label">₹</string>
 
 

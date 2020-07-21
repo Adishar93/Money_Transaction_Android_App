@@ -176,12 +176,14 @@ public class RequestMoneyFragment extends Fragment {
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView nameTextView;
             public TextView emailTextView;
+            public TextView secretUidTextView;
             private MaterialButton mMakeRequestButton;
 
             public MyViewHolder(@NonNull final View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.tvName);
                 emailTextView = itemView.findViewById(R.id.tvEmail);
+                secretUidTextView=itemView.findViewById(R.id.tvSecretUid);
                 mMakeRequestButton= itemView.findViewById(R.id.bMakeRequest);
 
                 mMakeRequestButton.setOnClickListener(new View.OnClickListener() {
@@ -192,12 +194,13 @@ public class RequestMoneyFragment extends Fragment {
                         assert getParentFragment().getFragmentManager() != null;
 
                         //initializing TextViews to access User data
-                        TextView mName=itemView.findViewById(R.id.tvName);
-                        TextView mEmail=itemView.findViewById(R.id.tvEmail);
+                        TextView Name=itemView.findViewById(R.id.tvName);
+                        TextView Email=itemView.findViewById(R.id.tvEmail);
+                        TextView secretUid=itemView.findViewById(R.id.tvSecretUid);
 
 
                         FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
-                        ft.replace(R.id.fragment_placeholder, MakeRequestUserDetailFragment.newInstance(mName.getText().toString(),mEmail.getText().toString()));
+                        ft.replace(R.id.fragment_placeholder, MakeRequestUserDetailFragment.newInstance(Name.getText().toString(),Email.getText().toString(),secretUid.getText().toString()));
                         ft.addToBackStack(null);
                         ft.commit();
                     }
@@ -207,6 +210,7 @@ public class RequestMoneyFragment extends Fragment {
             public void bindData(User user, Context context) {
                 nameTextView.setText(user.getName());
                 emailTextView.setText(user.getEmail());
+                secretUidTextView.setText(user.getUid());
             }
         }
 

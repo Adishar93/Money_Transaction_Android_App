@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -93,11 +94,15 @@ public class SignupFragment extends Fragment {
 
                 if(name.equals("")||email.equals("")||phone.equals("")||password.equals("")||confirmPassword.equals(""))
                 {
-                    Toast.makeText(getActivity(),"Fields cannot be left empty!",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),"Fields cannot be left empty!",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "Fields cannot be left empty!", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
                 else if(!password.equals(confirmPassword))
                 {
-                    Toast.makeText(getActivity(),"Entered Passwords do not match!",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(),"Entered Passwords do not match!",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), "Entered Passwords do not match!", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
                 else {
                     mAuth.createUserWithEmailAndPassword(email, password)
@@ -107,7 +112,9 @@ public class SignupFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         // Sign ip success
                                         Log.d("Firebase : ", "createUserWithEmail:success");
-                                        Toast.makeText(getContext(), "Account Created!",Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getContext(), "Account Created!",Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(getView(), "Account Created!", Snackbar.LENGTH_SHORT)
+                                                .show();
 
                                         //Update Database with user data
                                         user.setUid(mAuth.getUid());
@@ -116,12 +123,16 @@ public class SignupFragment extends Fragment {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
+                                                //Snackbar.make(getView(), "Data Written to Database!", Snackbar.LENGTH_SHORT)
+                                                 //       .show();
                                             }
                                         })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
+                                                        //Snackbar.make(getView(), "Failed to Write Data to Database!", Snackbar.LENGTH_SHORT)
+                                                          //      .show();
                                                     }
                                                 });
 
@@ -131,8 +142,9 @@ public class SignupFragment extends Fragment {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w("Firebase : ", "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(getContext(), "Create User failed.",
-                                                Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getContext(), "Create User failed.",Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(getView(), "Create User failed.", Snackbar.LENGTH_SHORT)
+                                                .show();
 
                                     }
 

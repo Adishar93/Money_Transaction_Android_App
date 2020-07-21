@@ -18,6 +18,7 @@ import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.activities.AuthenticationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -94,8 +95,9 @@ public class LoginFragment extends Fragment {
                                             } else {
                                                 // If sign in fails, display a message to the user.
                                                 Log.w("Firebase : ", "signInWithEmail:failure", task.getException());
-                                                Toast.makeText(getActivity(), "Authentication failed.",
-                                                        Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(getActivity(), "Authentication failed.",Toast.LENGTH_SHORT).show();
+                                                Snackbar.make(getView(), "Authentication failed.", Snackbar.LENGTH_SHORT)
+                                                        .show();
                                                 resetPassField();
                                                 // ...
                                             }
@@ -103,6 +105,11 @@ public class LoginFragment extends Fragment {
                                             // ...
                                         }
                                     });
+                        }
+                        else
+                        {
+                            Snackbar.make(getView(), "You cannot leave email or password empty !", Snackbar.LENGTH_SHORT)
+                                    .show();
                         }
 
 
