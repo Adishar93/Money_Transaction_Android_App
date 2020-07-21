@@ -169,12 +169,24 @@
 
 
         <Button
-            android:id="@+id/bSendRequest"
+            android:id="@+id/bGrantFullRequest"
             android:text="@string/grantFullb_label"
             style="@style/ButtonStyle"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-           android:layout_margin="40dp"
+            android:layout_margin="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+
+            ></Button>
+        <Button
+            android:id="@+id/bGrantPartialRequest"
+            android:text="@string/grantPartialb_label"
+            style="@style/ButtonStyle"
+            android:layout_toRightOf="@id/bGrantFullRequest"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

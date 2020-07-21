@@ -20,6 +20,7 @@
     <string name="sendRequestb_label">Send Request</string>
     <string name="viewRequestb_label">View Request</string>
     <string name="grantFullb_label">Grant Full</string>
+    <string name="grantPartialb_label">Grant Partial</string>
 
     <string name="warncl_amount_desc_empty">You cannot leave amount or description empty!</string>
 
