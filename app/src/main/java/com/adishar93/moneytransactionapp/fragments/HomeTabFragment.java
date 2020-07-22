@@ -23,7 +23,7 @@ public class HomeTabFragment extends Fragment {
 
 
 
-    String[] mTabNames={"Request","Grant"};
+    String[] mTabNames={"Request","Grant","History"};
 
     public HomeTabFragment() {
         // Required empty public constructor
@@ -87,6 +87,8 @@ public class HomeTabFragment extends Fragment {
                     return RequestMoneyFragment.newInstance();
                 case 1:
                     return ReceiveGrantFragment.newInstance();
+                case 2:
+                    return TransactionHistoryFragment.newInstance(null,null);
             }
             return RequestMoneyFragment.newInstance();
 
