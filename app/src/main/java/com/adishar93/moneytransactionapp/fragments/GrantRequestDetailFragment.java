@@ -1,15 +1,23 @@
 package com.adishar93.moneytransactionapp.fragments;
 
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.InputType;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -38,6 +46,7 @@ public class GrantRequestDetailFragment extends Fragment {
     private TextView mAmountTextView;
     private TextView mDescriptionTextView;
     private Button mGrantFullButton;
+    private Button mGrantPartialButton;
 
 
     public GrantRequestDetailFragment() {
@@ -77,6 +86,7 @@ public class GrantRequestDetailFragment extends Fragment {
         mAmountTextView=view.findViewById(R.id.tvAmount);
         mDescriptionTextView=view.findViewById(R.id.tvDescription);
         mGrantFullButton=view.findViewById(R.id.bGrantFullRequest);
+        mGrantPartialButton=view.findViewById(R.id.bGrantPartialRequest);
 
         mNameTextView.setText(mName);
         mEmailTextView.setText(mEmail);
@@ -91,6 +101,33 @@ public class GrantRequestDetailFragment extends Fragment {
                 ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(mAmountTextView.getText().toString(),null));
                 ft.addToBackStack(null);
                 ft.commit();
+            }
+        });
+
+        mGrantPartialButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Partial Payment");
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.dialog_layout_partial_grant, null);
+                    final TextInputEditText input=dialogView.findViewById(R.id.tietAmount);
+                    builder.setView(dialogView);
+                    builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.enter_from_left,R.anim.exit_to_right);
+                            ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(input.getText().toString(),null));
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }
+                    });
+                    builder.show();
+
             }
         });
 

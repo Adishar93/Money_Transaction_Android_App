@@ -7,12 +7,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.Utilities.GPayUtil;
@@ -46,7 +48,9 @@ public class PaymentFragment extends Fragment {
 
     // A client for interacting with the Google Pay API.
     private PaymentsClient paymentsClient;
+
     private View mGooglePayButton;
+    private TextView mAmountTextView;
 
 
     public PaymentFragment() {
@@ -79,6 +83,9 @@ public class PaymentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_payment, container, false);
         initializeGPayButton(view);
+        mAmountTextView=view.findViewById(R.id.tvAmount);
+
+        mAmountTextView.setText(mAmountTextView.getText().toString()+" "+mPrice);
 
         paymentsClient = GPayUtil.createPaymentsClient(getActivity());
         possiblyShowGooglePayButton();
@@ -184,7 +191,7 @@ public class PaymentFragment extends Fragment {
 
                     case Activity.RESULT_OK:
                         PaymentData paymentData = PaymentData.getFromIntent(data);
-                        //handlePaymentSuccess(paymentData);
+                        handlePaymentSuccess(paymentData);
                         Log.d("Payment Fragment : ","RESULT_OK Payment Data:"+paymentData.toJson());
                         break;
 
@@ -202,6 +209,42 @@ public class PaymentFragment extends Fragment {
 
                 // Re-enables the Google Pay payment button.
                 mGooglePayButton.setClickable(true);
+        }
+    }
+
+    private void handlePaymentSuccess(PaymentData paymentData) {
+
+        // Token will be null if PaymentDataRequest was not constructed using fromJson(String).
+        final String paymentInfo = paymentData.toJson();
+        if (paymentInfo == null) {
+            return;
+        }
+
+        try {
+            JSONObject paymentMethodData = new JSONObject(paymentInfo).getJSONObject("paymentMethodData");
+            // If the gateway is set to "example", no payment information is returned - instead, the
+            // token will only consist of "examplePaymentMethodToken".
+
+            final JSONObject tokenizationData = paymentMethodData.getJSONObject("tokenizationData");
+            final String tokenizationType = tokenizationData.getString("type");
+            final String token = tokenizationData.getString("token");
+
+            if ("PAYMENT_GATEWAY".equals(tokenizationType) && "examplePaymentMethodToken".equals(token)) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Warning")
+                        .setMessage("Gateway replace name example")
+                        .setPositiveButton("OK", null)
+                        .create()
+                        .show();
+            }
+
+            final JSONObject info = paymentMethodData.getJSONObject("info");
+
+            // Logging token string.
+            Log.d("Google Pay token: ", token);
+
+        } catch (JSONException e) {
+            throw new RuntimeException("Payment Data Parsing Error");
         }
     }
 }

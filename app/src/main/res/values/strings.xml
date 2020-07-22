@@ -11,6 +11,8 @@
     <string name="writeDescription_label">Write a description.</string>
     <string name="requestedBy_label">Requested By</string>
     <string name="description_label">Description</string>
+    <string name="total_label">Total</string>
+
 
     <string name="login_label">Login</string>
     <string name="signup_label">create a new account</string>

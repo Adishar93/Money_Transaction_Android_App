@@ -10,12 +10,44 @@
       android:layout_height="match_parent"
       >
 
+      <TextView
+          android:id="@+id/tvTotal_label"
+          android:text="@string/total_label"
+          android:textSize="15sp"
+          android:textColor="@color/FullBlack"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="30dp"
+          android:layout_marginEnd="30dp"
+          android:layout_marginTop="20dp"
+          android:layout_marginBottom="10dp"
 
+          />
 
+      <TextView
+          android:id="@+id/tvAmount"
+          android:text="@string/amounttv_label"
+          android:textSize="50sp"
+          android:textColor="@color/FullBlack"
+          android:layout_below="@id/tvTotal_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="30dp"
+          android:layout_marginEnd="30dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="20dp"
+
+          />
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/tvAmount">
       <include layout="@layout/googlepay_button_no_shadow"
           android:id="@+id/llgpay_button"
           android:visibility="invisible"
          />
+      </LinearLayout>
 
 
 
