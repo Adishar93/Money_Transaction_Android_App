@@ -3,10 +3,12 @@ package com.adishar93.moneytransactionapp.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.adishar93.moneytransactionapp.R;
@@ -35,6 +37,7 @@ public class GrantRequestDetailFragment extends Fragment {
     private TextView mEmailTextView;
     private TextView mAmountTextView;
     private TextView mDescriptionTextView;
+    private Button mGrantFullButton;
 
 
     public GrantRequestDetailFragment() {
@@ -73,11 +76,23 @@ public class GrantRequestDetailFragment extends Fragment {
         mEmailTextView=view.findViewById(R.id.tvEmail);
         mAmountTextView=view.findViewById(R.id.tvAmount);
         mDescriptionTextView=view.findViewById(R.id.tvDescription);
+        mGrantFullButton=view.findViewById(R.id.bGrantFullRequest);
 
         mNameTextView.setText(mName);
         mEmailTextView.setText(mEmail);
         mAmountTextView.setText(mAmount);
         mDescriptionTextView.setText(mDesc);
+
+        mGrantFullButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.enter_from_left,R.anim.exit_to_right);
+                ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(mAmountTextView.getText().toString(),null));
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
 
        return view;
     }

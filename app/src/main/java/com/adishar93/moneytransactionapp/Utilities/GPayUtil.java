@@ -25,8 +25,8 @@ public class GPayUtil {
         return new JSONObject() {{      put("type", "PAYMENT_GATEWAY");
             put("parameters", new JSONObject() {
                 {
-                    put("gateway", "example");
-                    put("gatewayMerchantId", "exampleGatewayMerchantId");
+                    put("gateway", "payu");
+                    put("gatewayMerchantId", "508029");
                 }
             });
         }};
@@ -34,7 +34,10 @@ public class GPayUtil {
 
     private static JSONArray getAllowedCardNetworks() {
         return new JSONArray()
-
+                .put("AMEX")
+                .put("DISCOVER")
+                .put("INTERAC")
+                .put("JCB")
                 .put("MASTERCARD")
                 .put("VISA");
     }
@@ -91,8 +94,8 @@ public class GPayUtil {
         JSONObject transactionInfo = new JSONObject();
         transactionInfo.put("totalPrice", price);
         transactionInfo.put("totalPriceStatus", "FINAL");
-       // transactionInfo.put("countryCode", Constants.COUNTRY_CODE);
-       // transactionInfo.put("currencyCode", Constants.CURRENCY_CODE);
+       //transactionInfo.put("countryCode", "IN");
+        transactionInfo.put("currencyCode", "INR");
         transactionInfo.put("checkoutOption", "COMPLETE_IMMEDIATE_PURCHASE");
 
         return transactionInfo;
