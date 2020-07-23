@@ -132,6 +132,7 @@ public class MakeRequestUserDetailFragment extends Fragment {
                            // Toast.makeText(getContext(), "Request made Successfully!", Toast.LENGTH_SHORT).show();
                             Snackbar.make(getView(), "Request made Successfully!", Snackbar.LENGTH_SHORT)
                                     .show();
+                            getFragmentManager().popBackStack();
                         }
                     })
                             .addOnFailureListener(new OnFailureListener() {

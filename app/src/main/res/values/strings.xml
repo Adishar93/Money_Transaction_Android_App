@@ -10,9 +10,11 @@
     <string name="enterAmount_label">Enter Amt</string>
     <string name="writeDescription_label">Write a description.</string>
     <string name="requestedBy_label">Requested By</string>
+    <string name="to_label">To</string>
     <string name="description_label">Description</string>
     <string name="total_label">Total</string>
     <string name="no_grant_request">You don\'t have any grant requests yet!</string>
+    <string name="no_transactions">You don\'t have any transaction history yet!</string>
     <string name="no_requestable">Sorry! Currently no requestable user available</string>
 
 
@@ -27,8 +29,6 @@
     <string name="grantPartialb_label">Grant Partial</string>
 
     <string name="warncl_amount_desc_empty">You cannot leave amount or description empty!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

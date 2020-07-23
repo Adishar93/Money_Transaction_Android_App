@@ -88,7 +88,7 @@ public class HomeTabFragment extends Fragment {
                 case 1:
                     return ReceiveGrantFragment.newInstance();
                 case 2:
-                    return TransactionHistoryFragment.newInstance(null,null);
+                    return TransactionHistoryFragment.newInstance();
             }
             return RequestMoneyFragment.newInstance();
 

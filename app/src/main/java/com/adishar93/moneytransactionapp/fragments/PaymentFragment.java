@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -151,7 +152,7 @@ public class PaymentFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View view) {
-                        Snackbar.make(getView(), "Google Pay Button Pressed!", Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(getView(), "Google Pay Button Pressed!", Snackbar.LENGTH_SHORT).show();
                         Log.d("GPayButton : ","Pressed");
 
 
@@ -166,8 +167,8 @@ public class PaymentFragment extends Fragment {
                         mReceiverFromDatabase.push().setValue(from);
 
                         mRequestsDatabase.child(mRequest.getUid()).removeValue();
-
-
+                        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        Snackbar.make(getView(), "Payment Successful!", Snackbar.LENGTH_SHORT).show();
 
                         //Temporarily commented
                         //requestPayment(view);

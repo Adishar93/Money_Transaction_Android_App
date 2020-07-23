@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/cvMain"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+
+
+    >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<!--        <ImageView-->
+<!--            android:id="@+id/leftborder"-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="126dp"-->
+<!--            android:src="@color/lightGrey"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            ></ImageView>-->
+
+        <LinearLayout
+            android:id="@+id/llDatenTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:text="xx/xx/xxxx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:padding="20dp"
+                />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:text="24:60"
+                android:layout_marginStart="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:padding="20dp"
+                />
+        </LinearLayout>
+
+<LinearLayout
+    android:id="@+id/llFromTo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/llDatenTime"
+    android:orientation="horizontal"
+    >
+        <TextView
+            android:id="@+id/tvFromName"
+            android:text="Name From"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:paddingStart="20dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+
+
+
+            />
+
+        <ImageView
+            android:id="@+id/ivTransactionRightArrow"
+            android:src="@drawable/red_arrow_right"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:layout_marginStart="30dp"
+            android:paddingStart="20dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+
+            />
+    <ImageView
+        android:id="@+id/ivTransactionLeftArrow"
+        android:src="@drawable/green_arrow_left"
+        android:visibility="visible"
+        android:layout_marginStart="30dp"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="20dp"
+
+
+        />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/tvToName"
+            android:text="Name To"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:paddingStart="20dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+
+            />
+</LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAmountNStatus"
+            android:layout_below="@id/llFromTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvAmount"
+                android:text="@string/amounttv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:paddingStart="20dp"
+                android:paddingBottom="20dp"
+                android:paddingEnd="20dp"
+                />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/tvStatus"
+                android:text="Confirmed"
+                android:layout_marginStart="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:paddingStart="20dp"
+                android:paddingBottom="20dp"
+                android:paddingEnd="20dp"
+                />
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

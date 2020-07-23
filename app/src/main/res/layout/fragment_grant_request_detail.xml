@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         >
 
+
         <TextView
             android:id="@+id/tvRequestedByLabel"
             android:text="@string/requestedBy_label"
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvRequestedByLabel"
-            app:cardCornerRadius="3dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -44,10 +45,18 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/leftborder"
+                    android:layout_width="15dp"
+                    android:layout_height="142dp"
+                    android:src="@color/colorAccent"
+                    android:layout_alignParentStart="true"
+                    ></ImageView>
 
                 <LinearLayout
                     android:id="@+id/llName"
                     android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/leftborder"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,6 +85,7 @@
                 <LinearLayout
                     android:id="@+id/llEmail"
                     android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/leftborder"
                     android:orientation="horizontal"
                     android:layout_below="@+id/llName"
                     android:layout_width="match_parent"

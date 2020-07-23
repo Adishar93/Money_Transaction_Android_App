@@ -8,6 +8,7 @@ public class Transaction {
     String amount;
     String description;
     String dateNTime;
+    public boolean to=true;
 
     public Transaction()
     {
