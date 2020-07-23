@@ -160,18 +160,18 @@ public class PaymentFragment extends Fragment {
 
 
                         //Temporary operation performed here for testing, this code will be shifted to onActivityResult later
-                        Transaction to=new Transaction(mRequest,String.valueOf(System.currentTimeMillis()));
-                        mCurrToDatabase.push().setValue(to);
-
-                        Transaction from=new Transaction(mUser.getUid(),mUser.getName(),mUser.getEmail(),mRequest.getAmount(),mRequest.getDescription(),String.valueOf(System.currentTimeMillis()));
-                        mReceiverFromDatabase.push().setValue(from);
-
-                        mRequestsDatabase.child(mRequest.getUid()).removeValue();
-                        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        Snackbar.make(getView(), "Payment Successful!", Snackbar.LENGTH_SHORT).show();
+//                        Transaction to=new Transaction(mRequest,String.valueOf(System.currentTimeMillis()));
+//                        mCurrToDatabase.push().setValue(to);
+//
+//                        Transaction from=new Transaction(mUser.getUid(),mUser.getName(),mUser.getEmail(),mRequest.getAmount(),mRequest.getDescription(),String.valueOf(System.currentTimeMillis()));
+//                        mReceiverFromDatabase.push().setValue(from);
+//
+//                        mRequestsDatabase.child(mRequest.getUid()).removeValue();
+//                        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                        Snackbar.make(getView(), "Payment Successful!", Snackbar.LENGTH_SHORT).show();
 
                         //Temporarily commented
-                        //requestPayment(view);
+                        requestPayment(view);
                     }
                 });
     }
@@ -285,6 +285,24 @@ public class PaymentFragment extends Fragment {
         if (paymentInfo == null) {
             return;
         }
+
+
+        //Perform App Related Events
+        Transaction to=new Transaction(mRequest,String.valueOf(System.currentTimeMillis()));
+        mCurrToDatabase.push().setValue(to);
+
+        Transaction from=new Transaction(mUser.getUid(),mUser.getName(),mUser.getEmail(),mRequest.getAmount(),mRequest.getDescription(),String.valueOf(System.currentTimeMillis()));
+        mReceiverFromDatabase.push().setValue(from);
+
+        mRequestsDatabase.child(mRequest.getUid()).removeValue();
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Snackbar.make(getView(), "Payment Successful!", Snackbar.LENGTH_SHORT).show();
+
+
+
+
+
+
 
         try {
             JSONObject paymentMethodData = new JSONObject(paymentInfo).getJSONObject("paymentMethodData");
