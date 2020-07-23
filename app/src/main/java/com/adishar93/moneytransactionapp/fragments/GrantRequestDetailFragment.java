@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
+import com.adishar93.moneytransactionapp.pojo.Request;
 import com.google.android.material.textfield.TextInputEditText;
 
 /**
@@ -31,15 +32,10 @@ public class GrantRequestDetailFragment extends Fragment {
 
 
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
-    private static final String ARG_PARAM4 = "param4";
 
 
-    private String mName;
-    private String mEmail;
-    private String mAmount;
-    private String mDesc;
+
+    private Request mRequest;
 
     private TextView mNameTextView;
     private TextView mEmailTextView;
@@ -54,13 +50,12 @@ public class GrantRequestDetailFragment extends Fragment {
     }
 
 
-    public static GrantRequestDetailFragment newInstance(String name, String email,String amount,String description) {
+    public static GrantRequestDetailFragment newInstance(Request request) {
         GrantRequestDetailFragment fragment = new GrantRequestDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, name);
-        args.putString(ARG_PARAM2, email);
-        args.putString(ARG_PARAM3, amount);
-        args.putString(ARG_PARAM4, description);
+
+        args.putSerializable(ARG_PARAM1,request);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,10 +64,7 @@ public class GrantRequestDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mName = getArguments().getString(ARG_PARAM1);
-            mEmail = getArguments().getString(ARG_PARAM2);
-            mAmount = getArguments().getString(ARG_PARAM3);
-            mDesc = getArguments().getString(ARG_PARAM4);
+            mRequest=(Request)getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -88,17 +80,17 @@ public class GrantRequestDetailFragment extends Fragment {
         mGrantFullButton=view.findViewById(R.id.bGrantFullRequest);
         mGrantPartialButton=view.findViewById(R.id.bGrantPartialRequest);
 
-        mNameTextView.setText(mName);
-        mEmailTextView.setText(mEmail);
-        mAmountTextView.setText(mAmount);
-        mDescriptionTextView.setText(mDesc);
+        mNameTextView.setText(mRequest.getName());
+        mEmailTextView.setText(mRequest.getEmail());
+        mAmountTextView.setText(mRequest.getAmount());
+        mDescriptionTextView.setText(mRequest.getDescription());
 
         mGrantFullButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.enter_from_left,R.anim.exit_to_right);
-                ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(mAmountTextView.getText().toString(),null));
+                ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(mAmountTextView.getText().toString(),mRequest));
                 ft.addToBackStack(null);
                 ft.commit();
             }
@@ -121,7 +113,7 @@ public class GrantRequestDetailFragment extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.enter_from_left,R.anim.exit_to_right);
-                            ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(input.getText().toString(),null));
+                            ft.replace(R.id.fragment_placeholder, PaymentFragment.newInstance(input.getText().toString(),mRequest));
                             ft.addToBackStack(null);
                             ft.commit();
                         }

@@ -12,6 +12,8 @@
     <string name="requestedBy_label">Requested By</string>
     <string name="description_label">Description</string>
     <string name="total_label">Total</string>
+    <string name="no_grant_request">You don\'t have any grant requests yet!</string>
+    <string name="no_requestable">Sorry! Currently no requestable user available</string>
 
 
     <string name="login_label">Login</string>

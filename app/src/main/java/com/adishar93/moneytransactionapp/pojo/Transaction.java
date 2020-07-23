@@ -1,25 +1,43 @@
 package com.adishar93.moneytransactionapp.pojo;
 
-import java.io.Serializable;
+public class Transaction {
 
-public class Request implements Serializable {
     String uid;
     String name;
     String email;
     String amount;
     String description;
+    String dateNTime;
 
-    public Request()
+    public Transaction()
     {
 
     }
 
-    public Request(String uid, String name, String email, String amount, String description) {
+    public Transaction(Request request,String dateNTime) {
+        this.uid = request.getUid();
+        this.name = request.getName();
+        this.email = request.getEmail();
+        this.amount = request.getAmount();
+        this.description = request.getDescription();
+        this.dateNTime=dateNTime;
+    }
+
+    public Transaction(String uid, String name, String email, String amount, String description,String dateNTime) {
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.amount = amount;
         this.description = description;
+        this.dateNTime=dateNTime;
+    }
+
+    public String getDateNTime() {
+        return dateNTime;
+    }
+
+    public void setDateNTime(String dateNTime) {
+        this.dateNTime = dateNTime;
     }
 
     public String getUid() {

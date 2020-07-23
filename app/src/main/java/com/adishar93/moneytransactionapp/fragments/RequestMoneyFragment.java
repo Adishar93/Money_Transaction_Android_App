@@ -20,12 +20,14 @@ import android.widget.Toast;
 import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,11 @@ public class RequestMoneyFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar mProgressView;
-
+    private TextView mNoRequestableTextView;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+
 
     public RequestMoneyFragment() {
         // Required empty public constructor
@@ -71,6 +74,7 @@ public class RequestMoneyFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mProgressView=view.findViewById(R.id.pbProgress);
+        mNoRequestableTextView=view.findViewById(R.id.tvNoRequestable);
 
         final List<User> userList = new ArrayList<>();
 
@@ -144,12 +148,29 @@ public class RequestMoneyFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("Firebase : ", "postComments:onCancelled", databaseError.toException());
-                Toast.makeText(getContext(), "Failed to load Users!",
-                        Toast.LENGTH_SHORT).show();
+                mProgressView.setVisibility(View.INVISIBLE);
+                Snackbar.make(getView(), "Failed to load Users!",
+                        Snackbar.LENGTH_SHORT).show();
             }
         };
         mDatabase.addChildEventListener(childEventListener);
 
+        //Check if database is empty
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() == null) {
+                    // The child doesn't exist
+                    mProgressView.setVisibility(View.INVISIBLE);
+                    mNoRequestableTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
 

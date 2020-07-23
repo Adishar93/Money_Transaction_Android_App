@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.Utilities.GPayUtil;
+import com.adishar93.moneytransactionapp.pojo.Request;
+import com.adishar93.moneytransactionapp.pojo.Transaction;
+import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +30,13 @@ import com.google.android.gms.wallet.PaymentData;
 import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +54,7 @@ public class PaymentFragment extends Fragment {
 
 
     private String mPrice;
-    private String mParam2;
+    private Request mRequest;
 
     // A client for interacting with the Google Pay API.
     private PaymentsClient paymentsClient;
@@ -52,17 +62,28 @@ public class PaymentFragment extends Fragment {
     private View mGooglePayButton;
     private TextView mAmountTextView;
 
+    //Two places in database will be written
+    DatabaseReference mCurrToDatabase;
+    DatabaseReference mReceiverFromDatabase;
+    //Fetch Data for this user
+    DatabaseReference mCurrUser;
+
+    //Also Delete Request after payment
+    DatabaseReference mRequestsDatabase;
+
+    private User mUser;
+
 
     public PaymentFragment() {
         // Required empty public constructor
     }
 
 
-    public static PaymentFragment newInstance(String price, String param2) {
+    public static PaymentFragment newInstance(String price, Request request) {
         PaymentFragment fragment = new PaymentFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, price);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM2,request);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,10 +91,37 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mPrice = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mRequest = (Request)getArguments().getSerializable(ARG_PARAM2);
+            mRequest.setAmount(mPrice);
         }
+
+        String currUid=FirebaseAuth.getInstance().getUid();
+        mCurrToDatabase= FirebaseDatabase.getInstance().getReference("TransactionTo").child(currUid);
+        mReceiverFromDatabase=FirebaseDatabase.getInstance().getReference("TransactionFrom").child(mRequest.getUid());
+        mCurrUser=FirebaseDatabase.getInstance().getReference("Users").child(currUid);
+        mRequestsDatabase=FirebaseDatabase.getInstance().getReference("Requests").child(currUid);
+
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+               mUser=dataSnapshot.getValue(User.class);
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mCurrUser.addListenerForSingleValueEvent(userListener);
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -105,7 +153,24 @@ public class PaymentFragment extends Fragment {
                     public void onClick(View view) {
                         Snackbar.make(getView(), "Google Pay Button Pressed!", Snackbar.LENGTH_SHORT).show();
                         Log.d("GPayButton : ","Pressed");
-                        requestPayment(view);
+
+
+
+
+
+                        //Temporary operation performed here for testing, this code will be shifted to onActivityResult later
+                        Transaction to=new Transaction(mRequest,String.valueOf(System.currentTimeMillis()));
+                        mCurrToDatabase.push().setValue(to);
+
+                        Transaction from=new Transaction(mUser.getUid(),mUser.getName(),mUser.getEmail(),mRequest.getAmount(),mRequest.getDescription(),String.valueOf(System.currentTimeMillis()));
+                        mReceiverFromDatabase.push().setValue(from);
+
+                        mRequestsDatabase.child(mRequest.getUid()).removeValue();
+
+
+
+                        //Temporarily commented
+                        //requestPayment(view);
                     }
                 });
     }

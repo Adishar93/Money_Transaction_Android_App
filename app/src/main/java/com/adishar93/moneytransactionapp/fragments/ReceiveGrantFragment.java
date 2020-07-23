@@ -21,12 +21,14 @@ import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.pojo.Request;
 import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +40,11 @@ public class ReceiveGrantFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar mProgressView;
+    private TextView mNoGrantRequestTextView;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+
 
     public ReceiveGrantFragment() {
         // Required empty public constructor
@@ -68,6 +72,7 @@ public class ReceiveGrantFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_receive_grant, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mProgressView=view.findViewById(R.id.pbProgress);
+        mNoGrantRequestTextView=view.findViewById(R.id.tvNoGrantRequest);
 
         final List<Request> requestList = new ArrayList<>();
         // use this setting to improve performance if you know that changes
@@ -95,6 +100,7 @@ public class ReceiveGrantFragment extends Fragment {
                 Log.d("Firebase : ", "onChildAdded:" + dataSnapshot.getKey());
 
                 Request temp=dataSnapshot.getValue(Request.class);
+
 
                     requestList.add(temp);
 
@@ -138,16 +144,33 @@ public class ReceiveGrantFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("Firebase : ", "postComments:onCancelled", databaseError.toException());
-                Toast.makeText(getContext(), "Failed to load Users!",
-                        Toast.LENGTH_SHORT).show();
+                mProgressView.setVisibility(View.INVISIBLE);
+                Snackbar.make(getView(), "Failed to load Users!",
+                        Snackbar.LENGTH_SHORT).show();
             }
         };
 
         mDatabase.addChildEventListener(childEventListener);
 
+        //Check if database is empty
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.getValue() == null) {
+                    // The child doesn't exist
+                    mProgressView.setVisibility(View.INVISIBLE);
+                    mNoGrantRequestTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         return view;
     }
-
 
 
 
@@ -190,7 +213,7 @@ public class ReceiveGrantFragment extends Fragment {
 
                         FragmentTransaction ft = getParentFragment().getFragmentManager().beginTransaction();
                         ft.setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right,R.anim.enter_from_right,R.anim.exit_to_left);
-                        ft.replace(R.id.fragment_placeholder, GrantRequestDetailFragment.newInstance(request.getName(),request.getEmail(),request.getAmount(),request.getDescription()));
+                        ft.replace(R.id.fragment_placeholder, GrantRequestDetailFragment.newInstance(request));
                         ft.addToBackStack(null);
                         ft.commit();
                     }
