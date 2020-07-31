@@ -20,10 +20,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +42,7 @@ public class SignupFragment extends Fragment {
     FirebaseAuth mAuth;
     FirebaseDatabase mdatabase;
     DatabaseReference mUserRef;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mPhoneAuthenticationCallbacks;
 
 
     EditText mName;
@@ -83,11 +91,11 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String name=mName.getText().toString();
-                String email=mEmail.getText().toString();
-                String phone=mPhone.getText().toString();
-                String password=mPassword.getText().toString();
-                String confirmPassword=mConfirmPassword.getText().toString();
+                final String name=mName.getText().toString();
+                final String email=mEmail.getText().toString();
+                final String phone=mPhone.getText().toString();
+                final String password=mPassword.getText().toString();
+                final String confirmPassword=mConfirmPassword.getText().toString();
 
                 final User user=new User(name,email,phone);
 
@@ -116,6 +124,13 @@ public class SignupFragment extends Fragment {
                                         Snackbar.make(getView(), "Account Created!", Snackbar.LENGTH_SHORT)
                                                 .show();
 
+
+                                        //After successful creation of email account, phone verification is performed and linked
+                                        phoneVerification(phone);
+
+
+
+
                                         //Update Database with user data
                                         user.setUid(mAuth.getUid());
                                         mUserRef.child(user.getUid()).setValue(user)
@@ -139,9 +154,7 @@ public class SignupFragment extends Fragment {
                                                     }
                                                 });
 
-                                        //update UI to the login page
-                                        mAuth.signOut();
-                                        openLogin();
+
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w("Firebase : ", "createUserWithEmail:failure", task.getException());
@@ -166,6 +179,85 @@ public class SignupFragment extends Fragment {
     private void openLogin()
     {
         getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    public void phoneVerification(String phoneNumber)
+    {
+        mPhoneAuthenticationCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                // This callback will be invoked in two situations:
+                // 1 - Instant verification. In some cases the phone number can be instantly
+                //     verified without needing to send or enter a verification code.
+                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                //     detect the incoming verification SMS and perform verification without
+                //     user action.
+                Log.d("Firebase : ", "onPhoneVerificationCompleted:" + credential);
+                Snackbar.make(getView(),"Phone verification Successful!",Snackbar.LENGTH_SHORT).show();
+
+                //Link phone account to email account
+                mAuth.getCurrentUser().linkWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("Firebase : ", "linkWithCredential:success");
+                                    //update UI to the login page
+                                    mAuth.signOut();
+                                    openLogin();
+                                } else {
+                                    Log.w("Firebase : ", "linkWithCredential:failure", task.getException());
+                                    mAuth.signOut();
+
+                                }
+
+                                // ...
+                            }
+                        });
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                // This callback is invoked in an invalid request for verification is made,
+                // for instance if the the phone number format is not valid.
+                Log.w("Firebase : ", "onPhoneVerificationFailed", e);
+
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+
+                }
+
+                // Show a message and update the UI
+                // ...
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+                Log.d("Firebase", "onCodeSent:" + verificationId);
+                Snackbar.make(getView(),"Verification Code sent to your phone!",Snackbar.LENGTH_SHORT).show();
+                // Save verification ID and resending token so we can use them later
+                //mVerificationId = verificationId;
+                //mResendToken = token;
+
+            }
+        };
+
+        //Phone sign in while passing callback
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                getActivity(),               // Activity (for callback binding)
+                mPhoneAuthenticationCallbacks);         // OnVerificationStateChangedCallbacks
+
     }
 }
 

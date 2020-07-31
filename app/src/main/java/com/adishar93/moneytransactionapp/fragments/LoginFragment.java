@@ -141,4 +141,5 @@ public class LoginFragment extends Fragment {
     {
         mPassword.setText("");
     }
+
 }
