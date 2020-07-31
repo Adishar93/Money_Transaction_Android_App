@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Money Transaction</string>
     <string name="name_label">Full Name</string>
-    <string name="phone_label">Mobile/Phone</string>
+    <string name="phone_label">Phone Ex: +9198..</string>
     <string name="email_label">Your Email Address</string>
     <string name="pass_label">Password</string>
     <string name="confpass_label">Confirm Password</string>
     <string name="amounttv_label">₹</string>
+    <string name="twoStepVerificationcb_label">Enable Two-Step Verification Login</string>
 
     <string name="enterAmount_label">Enter Amt</string>
     <string name="writeDescription_label">Write a description.</string>

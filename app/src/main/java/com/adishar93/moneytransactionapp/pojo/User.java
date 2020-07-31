@@ -5,6 +5,7 @@ public class User {
     String email;
     String phone;
     String uid;
+    boolean twoStepVerification=false;
 
     public User() {
 
@@ -48,4 +49,11 @@ public class User {
         this.phone = phone;
     }
 
+    public boolean isTwoStepVerification() {
+        return twoStepVerification;
+    }
+
+    public void setTwoStepVerification(boolean twoStepVerification) {
+        this.twoStepVerification = twoStepVerification;
+    }
 }

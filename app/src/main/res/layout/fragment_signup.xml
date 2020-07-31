@@ -145,9 +145,20 @@
 
                 </LinearLayout>
 
+                <CheckBox
+                    android:id="@+id/cbTwoStepVerification"
+                    android:checked="false"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_below="@id/llConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="@string/twoStepVerificationcb_label"/>
+
+
                 <Button
                     android:id="@+id/bSignup"
-                    android:layout_below="@id/llConfirmPassword"
+                    android:layout_below="@id/cbTwoStepVerification"
                     android:text="@string/signupb_label"
                     android:layout_centerHorizontal="true"
                     style="@style/ButtonStyle"

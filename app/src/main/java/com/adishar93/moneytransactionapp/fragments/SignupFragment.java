@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
@@ -44,12 +46,14 @@ public class SignupFragment extends Fragment {
     DatabaseReference mUserRef;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mPhoneAuthenticationCallbacks;
 
+    User user=null;
 
     EditText mName;
     EditText mEmail;
     EditText mPhone;
     EditText mPassword;
     EditText mConfirmPassword;
+    CheckBox mTwoStepVerificationCheckBox;
 
     Button mSignup;
 
@@ -83,6 +87,7 @@ public class SignupFragment extends Fragment {
         mPhone=view.findViewById(R.id.etPhone);
         mPassword=view.findViewById(R.id.etPassword);
         mConfirmPassword=view.findViewById(R.id.etConfirmPassword);
+        mTwoStepVerificationCheckBox=view.findViewById(R.id.cbTwoStepVerification);
 
         mSignup=view.findViewById(R.id.bSignup);
 
@@ -97,7 +102,7 @@ public class SignupFragment extends Fragment {
                 final String password=mPassword.getText().toString();
                 final String confirmPassword=mConfirmPassword.getText().toString();
 
-                final User user=new User(name,email,phone);
+                user=new User(name,email,phone);
 
 
                 if(name.equals("")||email.equals("")||phone.equals("")||password.equals("")||confirmPassword.equals(""))
@@ -126,33 +131,13 @@ public class SignupFragment extends Fragment {
 
 
                                         //After successful creation of email account, phone verification is performed and linked
-                                        phoneVerification(phone);
+                                        if(mTwoStepVerificationCheckBox.isChecked()) {
+                                            phoneVerification(phone);
+                                            user.setTwoStepVerification(true);
+                                        }
 
+                                           addUserToDatabase(!mTwoStepVerificationCheckBox.isChecked());
 
-
-
-                                        //Update Database with user data
-                                        user.setUid(mAuth.getUid());
-                                        mUserRef.child(user.getUid()).setValue(user)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                //Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
-                                                //Snackbar.make(getView(), "Data Written to Database!", Snackbar.LENGTH_SHORT)
-                                                 //       .show();
-                                                Log.d("Firebase : ", "Signup Data Written to Database");
-
-                                            }
-                                        })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        //Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
-                                                        //Snackbar.make(getView(), "Failed to Write Data to Database!", Snackbar.LENGTH_SHORT)
-                                                          //      .show();
-                                                        Log.d("Firebase : ", "Failed to write Signup Data to Database");
-                                                    }
-                                                });
 
 
                                     } else {
@@ -258,6 +243,40 @@ public class SignupFragment extends Fragment {
                 getActivity(),               // Activity (for callback binding)
                 mPhoneAuthenticationCallbacks);         // OnVerificationStateChangedCallbacks
 
+    }
+
+    public void addUserToDatabase(final boolean handleLaunch)
+    {
+        //Update Database with user data
+
+        user.setUid(mAuth.getUid());
+
+        if(handleLaunch) {
+            mAuth.signOut();
+            openLogin();
+        }
+
+        mUserRef.child(user.getUid()).setValue(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //Toast.makeText(getContext(), "Data Written to Database!",Toast.LENGTH_SHORT).show();
+                        //Snackbar.make(getView(), "Data Written to Database!", Snackbar.LENGTH_SHORT)
+                        //       .show();
+                        Log.d("Firebase : ", "Signup Data Written to Database");
+
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Toast.makeText(getContext(), "Failed to Write Data to Database!",Toast.LENGTH_SHORT).show();
+                        //Snackbar.make(getView(), "Failed to Write Data to Database!", Snackbar.LENGTH_SHORT)
+                        //      .show();
+                        Log.d("Firebase : ", "Failed to write Signup Data to Database");
+                    }
+                });
     }
 }
 

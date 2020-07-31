@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 // Sign in success, update UI with the signed-in user's information
                                                 Log.d("Firebase : ", "signInWithEmail:success");
-                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                final FirebaseUser user = mAuth.getCurrentUser();
 
                                                 //Login successful. Fetch user data
                                                 ValueEventListener userListener = new ValueEventListener() {
@@ -115,10 +115,15 @@ public class LoginFragment extends Fragment {
                                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                                         //After obtaining user data (with phone number) time for user phone verification
                                                         User currentUser=dataSnapshot.getValue(User.class);
-                                                        mAuth.signOut();
 
-                                                        phoneVerification(currentUser.getPhone());
-
+                                                        if(currentUser.isTwoStepVerification()) {
+                                                            mAuth.signOut();
+                                                            phoneVerification(currentUser.getPhone());
+                                                        }
+                                                        else
+                                                        {
+                                                            ((AuthenticationActivity) getActivity()).openHome(user);
+                                                        }
                                                     }
 
                                                     @Override
@@ -139,10 +144,9 @@ public class LoginFragment extends Fragment {
                                                 Snackbar.make(getView(), "Authentication failed.", Snackbar.LENGTH_SHORT)
                                                         .show();
                                                 resetPassField();
-                                                // ...
+
                                             }
 
-                                            // ...
                                         }
                                     });
                         }
