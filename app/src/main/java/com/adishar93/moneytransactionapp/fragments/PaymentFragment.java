@@ -1,7 +1,11 @@
 package com.adishar93.moneytransactionapp.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -42,8 +46,11 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class PaymentFragment extends Fragment {
@@ -51,7 +58,7 @@ public class PaymentFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 991;
+    private static final int UPI_PAYMENT = 991;
 
 
     private String mPrice;
@@ -143,11 +150,6 @@ public class PaymentFragment extends Fragment {
 
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       //Handle payment transaction
-    }
-
     public void initializePayButton(View view)
     {
         mPayButton=view.findViewById(R.id.bPay);
@@ -155,7 +157,101 @@ public class PaymentFragment extends Fragment {
         mPayButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                //Temporary operation performed here for testing, this code will be shifted to onActivityResult later and be replaced by UPI Intent code
+
+                if(isConnectionAvailable(getActivity())) {
+                    //Launch UPI Apps
+                    Uri uri =
+                            Uri.parse("upi://pay").buildUpon()
+                                    .appendQueryParameter("pa", "kamaltenet@oksbi")       // Personal hardcoded UPI ID for testing
+                                    .appendQueryParameter("pn", "Kamal Sharma")          // name
+                                    .appendQueryParameter("tn", mRequest.getDescription())       //  note about payment
+                                    .appendQueryParameter("am", "5")           // Test amount for minimum loss
+                                    .appendQueryParameter("cu", "INR")                         // currency
+                                    .build();
+
+
+                    Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
+                    upiPayIntent.setData(uri);
+
+                    // will always show a dialog to user to choose an app
+                    Intent chooser = Intent.createChooser(upiPayIntent, "Pay with");
+
+                    // check if intent resolves
+                    if (null != chooser.resolveActivity(getActivity().getPackageManager())) {
+                        startActivityForResult(chooser, UPI_PAYMENT);
+                    } else {
+                        Snackbar.make(getView(), "No UPI app found, please install one to continue", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Snackbar.make(getView(),"No Internet Connection! Pleaase Try Again. ",Snackbar.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Handle payment transaction
+        switch (requestCode) {
+            case UPI_PAYMENT:
+                if ((RESULT_OK == resultCode) || (resultCode == 11)) {
+                    if (data != null) {
+                        String trxt = data.getStringExtra("response");
+                        Log.e("UPI", "onActivityResult: " + trxt);
+                        ArrayList<String> dataList = new ArrayList<>();
+                        dataList.add(trxt);
+                        upiPaymentDataOperation(dataList);
+                    } else {
+                        Log.e("UPI", "onActivityResult: " + "Return data is null");
+                        ArrayList<String> dataList = new ArrayList<>();
+                        dataList.add("nothing");
+                        upiPaymentDataOperation(dataList);
+                    }
+                } else {
+                    //when user simply back without payment
+                    Log.e("UPI", "onActivityResult: " + "Return data is null");
+                    ArrayList<String> dataList = new ArrayList<>();
+                    dataList.add("nothing");
+                    upiPaymentDataOperation(dataList);
+                }
+                break;
+        }
+    }
+
+    private void upiPaymentDataOperation(ArrayList<String> data) {
+
+            String str = data.get(0);
+            Log.e("UPIPAY", "upiPaymentDataOperation: "+str);
+            String paymentCancel = "";
+            if(str == null) str = "discard";
+            String status = "";
+            String approvalRefNo = "";
+            String response[] = str.split("&");
+            for (int i = 0; i < response.length; i++) {
+                String equalStr[] = response[i].split("=");
+                if(equalStr.length >= 2) {
+                    if (equalStr[0].toLowerCase().equals("Status".toLowerCase())) {
+                        status = equalStr[1].toLowerCase();
+                    }
+                    else if (equalStr[0].toLowerCase().equals("ApprovalRefNo".toLowerCase()) || equalStr[0].toLowerCase().equals("txnRef".toLowerCase())) {
+                        approvalRefNo = equalStr[1];
+                    }
+                }
+                else {
+                    paymentCancel = "Payment cancelled by user.";
+                }
+            }
+
+            if (status.equals("success")) {
+                //Code to handle successful transaction here.
+                Snackbar.make(getView(), "Payment successful!", Snackbar.LENGTH_SHORT).show();
+                Log.e("UPI", "payment successfull: "+approvalRefNo);
+
+                //After Successful transaction, store transaction data into history and delete request.
                         Transaction to=new Transaction(mRequest,String.valueOf(System.currentTimeMillis()));
                         mCurrToDatabase.push().setValue(to);
 
@@ -165,10 +261,32 @@ public class PaymentFragment extends Fragment {
                         mRequestsDatabase.child(mRequest.getUid()).removeValue();
                         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         Snackbar.make(getView(), "Payment Successful!", Snackbar.LENGTH_SHORT).show();
-
+            }
+            else if("Payment cancelled by user.".equals(paymentCancel)) {
+                Snackbar.make(getView(), "Payment cancelled by user.", Snackbar.LENGTH_SHORT).show();
+                Log.e("UPI", "Cancelled by user: "+approvalRefNo);
 
             }
-        });
+            else {
+                Snackbar.make(getView(), "Transaction failed.Please try again", Snackbar.LENGTH_SHORT).show();
+                Log.e("UPI", "failed payment: "+approvalRefNo);
+
+            }
+
     }
+
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.isConnected()
+                    && netInfo.isConnectedOrConnecting()
+                    && netInfo.isAvailable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
