@@ -9,6 +9,7 @@
     <string name="twoStepVerificationcb_label">Enable Two-Step Verification Login</string>
 
     <string name="enterAmount_label">Enter Amt</string>
+    <string name="enterOTP_label">Enter OTP</string>
     <string name="writeDescription_label">Write a description.</string>
     <string name="requestedBy_label">Requested By</string>
     <string name="to_label">To</string>

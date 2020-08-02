@@ -1,8 +1,10 @@
 package com.adishar93.moneytransactionapp.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
@@ -52,6 +55,7 @@ public class LoginFragment extends Fragment {
     EditText mEmail;
     EditText mPassword;
     TextView mSignup;
+    AlertDialog mOTPDialog;
 
 
     public LoginFragment() {
@@ -201,6 +205,10 @@ public class LoginFragment extends Fragment {
                 Log.d("Firebase : ", "onPhoneVerificationCompleted:" + credential);
                 Snackbar.make(getView(),"Phone verification Successful!",Snackbar.LENGTH_SHORT).show();
 
+                if(mOTPDialog!=null)
+                {
+                    mOTPDialog.cancel();
+                }
 
                 //Login with the phone
                     mAuth.signInWithCredential(credential)
@@ -233,10 +241,11 @@ public class LoginFragment extends Fragment {
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
+                    Snackbar.make(getView(),"Phone verification failed! invalid OTP!",Snackbar.LENGTH_SHORT).show();
 
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
-
+                    Snackbar.make(getView(),"Oops! Phone verification failed!",Snackbar.LENGTH_SHORT).show();
                 }
 
                 // Show a message and update the UI
@@ -254,6 +263,7 @@ public class LoginFragment extends Fragment {
                 // Save verification ID and resending token so we can use them later
                 //mVerificationId = verificationId;
                 //mResendToken = token;
+                showOTPDialog(verificationId);
 
             }
         };
@@ -266,6 +276,54 @@ public class LoginFragment extends Fragment {
                 getActivity(),               // Activity (for callback binding)
                 mPhoneAuthenticationCallbacks);         // OnVerificationStateChangedCallbacks
 
+    }
+
+    public void showOTPDialog(final String verificationId)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Phone Verification");
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_layout_otp, null);
+        final TextInputEditText input=dialogView.findViewById(R.id.tietOTP);
+        builder.setView(dialogView);
+        builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Create credential for the user using OTP entered
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, input.getText().toString());
+
+
+                Log.d("Firebase : ", "onPhoneVerificationCompleted:" + credential);
+                Snackbar.make(getView(),"Phone verification Successful!",Snackbar.LENGTH_SHORT).show();
+
+
+                //Login with the phone
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("Firebase : ", "signInWithCredential:success");
+                                    Snackbar.make(getView(),"Phone Verification SignIn successful",Snackbar.LENGTH_SHORT).show();
+                                    ((AuthenticationActivity) getActivity()).openHome(mAuth.getCurrentUser());
+
+                                } else {
+                                    // Sign in failed, display a message and update the UI
+                                    Log.w("Firebase : ", "signInWithCredential:failure", task.getException());
+                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                        // The verification code entered was invalid
+                                    }
+                                }
+                            }
+                        });
+
+            }
+        });
+        AlertDialog otpDialog=builder.create();
+        otpDialog.show();
+        mOTPDialog=otpDialog;
     }
 
 }

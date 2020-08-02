@@ -1,8 +1,10 @@
 package com.adishar93.moneytransactionapp.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
@@ -54,6 +57,7 @@ public class SignupFragment extends Fragment {
     EditText mPassword;
     EditText mConfirmPassword;
     CheckBox mTwoStepVerificationCheckBox;
+    AlertDialog mOTPDialog;
 
     Button mSignup;
 
@@ -181,6 +185,11 @@ public class SignupFragment extends Fragment {
                 Log.d("Firebase : ", "onPhoneVerificationCompleted:" + credential);
                 Snackbar.make(getView(),"Phone verification Successful!",Snackbar.LENGTH_SHORT).show();
 
+                if(mOTPDialog!=null)
+                {
+                    mOTPDialog.cancel();
+                }
+
                 //Link phone account to email account
                 mAuth.getCurrentUser().linkWithCredential(credential)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -188,6 +197,7 @@ public class SignupFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("Firebase : ", "linkWithCredential:success");
+
                                     //update UI to the login page
                                     mAuth.signOut();
                                     openLogin();
@@ -231,6 +241,8 @@ public class SignupFragment extends Fragment {
                 // Save verification ID and resending token so we can use them later
                 //mVerificationId = verificationId;
                 //mResendToken = token;
+
+              showOTPDialog(verificationId);
 
             }
         };
@@ -277,6 +289,51 @@ public class SignupFragment extends Fragment {
                         Log.d("Firebase : ", "Failed to write Signup Data to Database");
                     }
                 });
+    }
+
+    public void showOTPDialog(final String verificationId)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Phone Verification");
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_layout_otp, null);
+        final TextInputEditText input=dialogView.findViewById(R.id.tietOTP);
+        builder.setView(dialogView);
+        builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Create credential for the user using OTP entered
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, input.getText().toString());
+
+                //Link phone account to email account
+                mAuth.getCurrentUser().linkWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("Firebase : ", "linkWithCredential:success");
+                                    Snackbar.make(getView(),"Phone verification Successful!",Snackbar.LENGTH_SHORT).show();
+                                    //update UI to the login page
+                                    mAuth.signOut();
+                                    openLogin();
+                                } else {
+                                    Log.w("Firebase : ", "linkWithCredential:failure", task.getException());
+                                    Snackbar.make(getView(),"Something went wrong with phone verification!",Snackbar.LENGTH_SHORT).show();
+                                    mAuth.signOut();
+
+                                }
+
+                                // ...
+                            }
+                        });
+            }
+        });
+        AlertDialog otpDialog=builder.create();
+        otpDialog.show();
+        mOTPDialog=otpDialog;
+
     }
 }
 
