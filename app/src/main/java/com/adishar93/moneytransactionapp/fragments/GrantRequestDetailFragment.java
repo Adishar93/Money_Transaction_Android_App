@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.adishar93.moneytransactionapp.R;
 import com.adishar93.moneytransactionapp.pojo.Request;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
 /**
@@ -101,7 +102,7 @@ public class GrantRequestDetailFragment extends Fragment {
             public void onClick(View v) {
 
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle("Partial Payment");
 
                     LayoutInflater inflater = getLayoutInflater();

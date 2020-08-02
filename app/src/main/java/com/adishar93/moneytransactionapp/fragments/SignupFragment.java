@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
@@ -219,10 +220,13 @@ public class SignupFragment extends Fragment {
                 Log.w("Firebase : ", "onPhoneVerificationFailed", e);
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
+                    Snackbar.make(getView(),"Phone verification failed! invalid OTP!",Snackbar.LENGTH_SHORT).show();
+                    mAuth.signOut();
 
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
+                    Snackbar.make(getView(),"Oops! Phone verification failed!",Snackbar.LENGTH_SHORT).show();
+                    mAuth.signOut();
 
                 }
 
@@ -293,7 +297,7 @@ public class SignupFragment extends Fragment {
 
     public void showOTPDialog(final String verificationId)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle("Phone Verification");
 
         LayoutInflater inflater = getLayoutInflater();

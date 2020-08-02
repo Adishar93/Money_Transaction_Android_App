@@ -21,6 +21,7 @@ import com.adishar93.moneytransactionapp.activities.AuthenticationActivity;
 import com.adishar93.moneytransactionapp.pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
@@ -280,7 +281,7 @@ public class LoginFragment extends Fragment {
 
     public void showOTPDialog(final String verificationId)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle("Phone Verification");
 
         LayoutInflater inflater = getLayoutInflater();
